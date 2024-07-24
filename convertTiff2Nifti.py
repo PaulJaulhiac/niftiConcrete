@@ -30,6 +30,6 @@ def convert_tiffs_to_nifti(tiff_directory, output_file):
     print(f"Saved NIfTI file to {output_file}")
 
 # Usage example
-tiff_directory = os.path.expanduser('~/Documents/niftiConcrete/y01')
-output_nifti_file = os.path.expanduser('~/Documents/niftiConcrete/y01_nifti')
+tiff_directory = os.path.expanduser('~/pathToYourInputTiffDirectory')
+output_nifti_file = os.path.expanduser('~/pathToYourOutputNifti')
 convert_tiffs_to_nifti(tiff_directory, output_nifti_file)
