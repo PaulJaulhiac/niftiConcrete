@@ -11,9 +11,9 @@ Their publication: Chauvin, L., Kumar, K., Wachinger, C., Vangel, M., de Guise, 
                   Neuroimage signature from salient keypoints is highly specific to individuals and shared by close relatives. NeuroImage, 204, p.116208.
           https://doi.org/10.1016/j.neuroimage.2019.116208
           (Contact: laurent.chauvin0@gmail.com, matt.toews@gmail.com)
-                  
-    .jpg to .nifti for medical imaging analysis.
+
     .tiff to .jpg for standard image format conversion.
+    .jpg to .nifti for medical imaging analysis.
     .tiff to .nifti for use in medical imaging environments.
 
 Requirements
@@ -50,23 +50,23 @@ Examples
 
 Convert .key to .vtk:
 
-# Input: key file containing XYZ and scale, extracted from NIfTI file using 3D-SIFT program. (Cf. 3DSIFT-Rank-Paul-Jaulhiac_CompileFix) 
-# Output: VTK file with points and scale as scalars.
+    # Input: key file containing XYZ and scale, extracted from NIfTI file using 3D-SIFT program. (Cf. 3DSIFT-Rank-Paul-Jaulhiac_CompileFix) 
+    # Output: VTK file with points and scale as scalars.
 
 Convert .jpg to .nifti:
 
-# Input: JPEG image file.
-# Output: NIfTI file suitable for medical imaging software.
+    # Input: JPEG image file.
+    # Output: NIfTI file suitable for medical imaging software.
 
 Convert .tiff to .jpg:
 
-# Input: TIFF image file.
-# Output: JPEG image file.
+    # Input: TIFF image file.
+    # Output: JPEG image file.
 
 Convert .tiff to .nifti:
 
-# Input: TIFF image file.
-# Output: NIfTI file for medical imaging purposes.
+    # Input: TIFF image file.
+    # Output: NIfTI file for medical imaging purposes.
 
 Troubleshooting
 
