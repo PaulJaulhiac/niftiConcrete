@@ -20,7 +20,7 @@ def convert_jpg_to_nii(jpg_path, nii_path):
     nib.save(nifti_img, nii_path)
     print(f"Converted {jpg_path} to {nii_path}")
 
-# Directories to process
+# Directories to process because I had two directories in my application
 directories = {
     'firstPathToYourJPGfiles': (1328, 1347),
     'secondPathToYourJPGfiles': (0, 19)
