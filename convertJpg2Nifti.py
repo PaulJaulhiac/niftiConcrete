@@ -26,8 +26,8 @@ directories = {
     'y01_nifti/ConvJPG': (0, 19)
 }
 
-base_dir = '~/Documents/niftiConcrete/'
-output_base_dir = '~/Documents/niftiConcrete/nii_output/'
+base_dir = '~/yourInputFilePath'
+output_base_dir = '~/yourOutputFilePath'
 
 # Iterate over directories and file ranges
 for dir_key, (start, end) in directories.items():
