@@ -20,10 +20,10 @@ def convert_jpg_to_nii(jpg_path, nii_path):
     nib.save(nifti_img, nii_path)
     print(f"Converted {jpg_path} to {nii_path}")
 
-# Directories to process because I had two directories in my application
+# Directories to process because I had two directories in my application, and the range of identifiers I wanted to choose
 directories = {
-    'firstPathToYourJPGfiles': (1328, 1347),
-    'secondPathToYourJPGfiles': (0, 19)
+    'firstPathToYourJPGfilesFromBaseDir': (1328, 1347),
+    'secondPathToYourJPGfilesFromBaseDir': (0, 19)
 }
 
 base_dir = '~/yourInputFileBaseDirectory'
@@ -36,8 +36,8 @@ for dir_key, (start, end) in directories.items():
 
     # Convert a range of files
     for i in range(start, end + 1):
-        jpg_filename = f"concrete_{dir_key.split('_')[0]}_{i:05d}.jpg"
-        nii_filename = f"concrete_{dir_key.split('_')[0]}_{i:05d}.nii"
+        jpg_filename = f"startJpgFileName_{dir_key.split('_')[0]}_{i:05d}.jpg"
+        nii_filename = f"startNiftiFileName_{dir_key.split('_')[0]}_{i:05d}.nii"
 
         jpg_path = input_dir + jpg_filename
         nii_path = output_dir + nii_filename
