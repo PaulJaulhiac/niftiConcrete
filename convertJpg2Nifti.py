@@ -22,12 +22,12 @@ def convert_jpg_to_nii(jpg_path, nii_path):
 
 # Directories to process
 directories = {
-    'y00_nifti/ConvJPG': (1328, 1347),
-    'y01_nifti/ConvJPG': (0, 19)
+    'firstPathToYourJPGfiles': (1328, 1347),
+    'secondPathToYourJPGfiles': (0, 19)
 }
 
-base_dir = '~/yourInputFilePath'
-output_base_dir = '~/yourOutputFilePath'
+base_dir = '~/yourInputFileBaseDirectory'
+output_base_dir = '~/yourOutputFileBaseDirectory'
 
 # Iterate over directories and file ranges
 for dir_key, (start, end) in directories.items():
