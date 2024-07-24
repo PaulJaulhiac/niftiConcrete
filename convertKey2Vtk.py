@@ -29,8 +29,8 @@ def create_vtk_from_data(data, vtk_file_path):
     writer.Write()
 
 def main():
-    key_file_path = os.path.expanduser('~/Documents/niftiConcrete/y01_nifti/keyFiles/y01_nifti.key')  # Path to your .key file
-    vtk_file_path = os.path.expanduser('~/Documents/niftiConcrete/y01_nifti/keyFiles/y01_3Dviz_2.vtk')  # Output VTK file path
+    key_file_path = os.path.expanduser('~/pathToYourKeyFile.key')  # Path to your .key file
+    vtk_file_path = os.path.expanduser('~/pathToVtkFileYouCreate.vtk')  # Output VTK file path
     data = read_key_file(key_file_path)
     create_vtk_from_data(data, vtk_file_path)
     print("VTK file has been created.")
