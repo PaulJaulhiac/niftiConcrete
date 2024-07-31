@@ -30,8 +30,6 @@ def check_close_spheres(data, threshold=0.1):  # Threshold defines how close poi
 
     return close_pairs
 
-import vtk
-
 def create_vtk_from_data(data, vtk_file_path):
     append_filter = vtk.vtkAppendPolyData()
     colors = vtk.vtkUnsignedCharArray()  # Create an array to store color data
