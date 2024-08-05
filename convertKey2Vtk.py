@@ -36,17 +36,28 @@ def create_vtk_from_data(data, vtk_file_path):
     colors.SetNumberOfComponents(3)  # We will store RGB values
     colors.SetName("Colors")  # Set the name of the color array
 
+    color_palette = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]  # Red, Green, Blue
+
+    num_cells = 0  # Track the number of cells added
+
     for idx, row in data.iterrows():
+        # Create sphere
         sphere_source = vtk.vtkSphereSource()
-        sphere_source.SetRadius(3*row['Scale'])
+        sphere_source.SetRadius(3 * row['Scale'])
         sphere_source.SetCenter(row['X'], row['Y'], row['Z'])
         sphere_source.SetThetaResolution(30)
         sphere_source.SetPhiResolution(30)
         sphere_source.Update()
         append_filter.AddInputData(sphere_source.GetOutput())
 
-        color_palette = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]  # Red, Green, Blue
+        # Increment cell count and add color for the sphere
+        num_cells += sphere_source.GetOutput().GetNumberOfCells()
+        sphere_color = [255, 255, 255]  # Assuming white for spheres
+        for _ in range(sphere_source.GetOutput().GetNumberOfCells()):
+            colors.InsertNextTuple3(*sphere_color)
+
         for i in range(3):
+            # Create arrow
             arrow_source = vtk.vtkArrowSource()
             arrow_source.SetTipLength(0.3)
             arrow_source.SetTipRadius(0.1)
@@ -60,14 +71,21 @@ def create_vtk_from_data(data, vtk_file_path):
             transform_filter.SetTransform(transform)
             transform_filter.SetInputConnection(arrow_source.GetOutputPort())
             transform_filter.Update()
-            
-            # Set the color for each vector
+
+            # Increment cell count and add color for the arrow
+            num_cells += transform_filter.GetOutput().GetNumberOfCells()
             color = color_palette[i % 3]
-            colors.InsertNextTuple3(*color)
+            for _ in range(transform_filter.GetOutput().GetNumberOfCells()):
+                colors.InsertNextTuple3(*color)
 
             append_filter.AddInputData(transform_filter.GetOutput())
 
     append_filter.Update()
+
+    # Ensure the colors array matches the number of cells
+    if colors.GetNumberOfTuples() != num_cells:
+        print(f"Warning: Number of colors ({colors.GetNumberOfTuples()}) does not match number of cells ({num_cells}).")
+
     append_filter.GetOutput().GetCellData().SetScalars(colors)  # Attach color data to cells
 
     # Change to using vtkXMLPolyDataWriter for .vtp output
