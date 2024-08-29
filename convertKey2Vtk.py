@@ -161,10 +161,10 @@ def create_vtk_for_positive_negative(data, vtk_file_path):
 
 # Main function to orchestrate the reading, processing, and writing of VTK files
 def main():
-    base_path = os.path.expanduser('~/Documents/Molecules')  # Define the base path
+    base_path = os.path.expanduser('~/BasePath')  # Define the base path
 
-    key_file_path = os.path.join(base_path, 'keyFiles/-w', 'Conformer3D_Sucrose.key')  # Path to the key file
-    vtk_file_path_base = os.path.join(base_path, 'visualization/-w', 'Conformer3D_Sucrose')  # Base path for the VTK output files
+    key_file_path = os.path.join(base_path, 'path2KeyFile, 'keyFileName.key')  # Path to the key file
+    vtk_file_path_base = os.path.join(base_path, 'path2VisualisationFiles', 'vtkFileName')  # Base path for the VTK output files
 
     if os.path.exists(key_file_path):  # Check if the key file exists
         data = read_key_file(key_file_path)  # Read the key file
