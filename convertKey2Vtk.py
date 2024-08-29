@@ -5,9 +5,10 @@ from scipy.spatial.distance import cdist
 
 # Function to read a key file and return the data as a pandas DataFrame
 def read_key_file(key_file_path):
-    # Read the file, skipping the first 6 rows and reading 13 columns
-    data = pd.read_csv(key_file_path, skiprows=6, header=None, sep='\s+', usecols=range(13))
-    data.columns = ['X', 'Y', 'Z', 'Scale', 'o11', 'o12', 'o13', 'o21', 'o22', 'o23', 'o31', 'o32', 'o33']  # Assign column names
+    # Read the file, skipping the first 6 rows and reading all 17 columns
+    data = pd.read_csv(key_file_path, skiprows=6, header=None, sep='\s+', usecols=range(17))
+    # Assign column names, including e1, e2, e3, and InfoFlag as the last four columns
+    data.columns = ['X', 'Y', 'Z', 'Scale', 'o11', 'o12', 'o13', 'o21', 'o22', 'o23', 'o31', 'o32', 'o33', 'e1', 'e2', 'e3', 'InfoFlag']
 
     # Check for duplicate rows based on X, Y, Z columns
     duplicates = data.duplicated(subset=['X', 'Y', 'Z'], keep=False)
@@ -109,19 +110,68 @@ def get_orientation_transform(row, index):
         transform.RotateWXYZ(90, row['o31'], row['o32'], row['o33'])  # Rotate based on the third orientation vector
     return transform
 
+# New function to create a VTK file for positive and negative features
+def create_vtk_for_positive_negative(data, vtk_file_path):
+    append_filter = vtk.vtkAppendPolyData()
+    colors = vtk.vtkUnsignedCharArray()
+    colors.SetNumberOfComponents(3)
+    colors.SetName("Colors")
+
+    positive_count = 0
+    negative_count = 0
+
+    for idx, row in data.iterrows():
+        if row['InfoFlag'] == 0:  # Positive feature
+            positive_count += 1
+            sphere_color = [255, 255, 0]  # Yellow for positive
+        elif row['InfoFlag'] == 16:  # Negative feature
+            negative_count += 1
+            sphere_color = [0, 0, 255]  # Blue for negative
+        else:
+            continue  # Skip features that are reoriented (InfoFlag != 0 or 16)
+
+        # Create a sphere for the positive or negative feature
+        sphere_source = vtk.vtkSphereSource()
+        sphere_source.SetRadius(row['Scale'])
+        sphere_source.SetCenter(row['X'], row['Y'], row['Z'])
+        sphere_source.SetThetaResolution(30)
+        sphere_source.SetPhiResolution(30)
+        sphere_source.Update()
+
+        append_filter.AddInputData(sphere_source.GetOutput())
+
+        for _ in range(sphere_source.GetOutput().GetNumberOfCells()):
+            colors.InsertNextTuple3(*sphere_color)
+
+    append_filter.Update()
+
+    # Assign colors to the cells
+    append_filter.GetOutput().GetCellData().SetScalars(colors)
+
+    # Write the VTK file
+    writer = vtk.vtkXMLPolyDataWriter()
+    writer.SetFileName(vtk_file_path.replace('.vtk', '_positive_negative.vtp'))
+    writer.SetInputData(append_filter.GetOutput())
+    writer.Write()
+
+    # Print the counts of positive and negative features
+    print(f"Number of positive features: {positive_count}")
+    print(f"Number of negative features: {negative_count}")
+
+
 # Main function to orchestrate the reading, processing, and writing of VTK files
 def main():
-    base_path = os.path.expanduser('~/Documents/gameImages')  # Define the base path
+    base_path = os.path.expanduser('~/Documents/Molecules')  # Define the base path
 
-    key_file_path = os.path.join(base_path, '...', '... .key')  # Path to the key file
-    vtk_file_path_base = os.path.join(base_path, '...', '...')  # Base path for the VTK output files
+    key_file_path = os.path.join(base_path, 'keyFiles/-w', 'Conformer3D_Sucrose.key')  # Path to the key file
+    vtk_file_path_base = os.path.join(base_path, 'visualization/-w', 'Conformer3D_Sucrose')  # Base path for the VTK output files
 
     if os.path.exists(key_file_path):  # Check if the key file exists
         data = read_key_file(key_file_path)  # Read the key file
 
         # Generate the combined VTP file with both spheres and arrows
-        create_vtk_from_data(data, f"{vtk_file_path_base}_combined.vtp", output_type='both')
-        print(f"Combined VTP file has been created.")
+        #create_vtk_from_data(data, f"{vtk_file_path_base}_combined.vtp", output_type='both')
+        #print(f"Combined VTP file has been created.")
 
         # Generate the spheres-only VTP file
         create_vtk_from_data(data, f"{vtk_file_path_base}_spheres.vtp", output_type='spheres')
@@ -130,6 +180,10 @@ def main():
         # Generate the arrows-only VTP file
         create_vtk_from_data(data, f"{vtk_file_path_base}_arrows.vtp", output_type='arrows')
         print(f"Arrows-only VTP file has been created.")
+
+        # Generate the positive and negative spheres VTP file
+        create_vtk_for_positive_negative(data, f"{vtk_file_path_base}_positive_negative.vtp")
+        print(f"Positive and Negative spheres VTP file has been created.")
 
 if __name__ == "__main__":
     main()  # Run the main function
